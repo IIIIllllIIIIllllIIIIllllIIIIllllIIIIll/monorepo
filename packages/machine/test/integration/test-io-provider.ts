@@ -2,13 +2,6 @@ import * as cf from "@counterfactual/cf.js";
 
 import { Context } from "../../src/instruction-executor";
 
-// FIXME: Don't import functions from source code.
-// https://github.com/counterfactual/monorepo/issues/98
-import { Opcode } from "../../src/instructions";
-
-// FIXME: Don't import functions from source code.
-// https://github.com/counterfactual/monorepo/issues/8
-import { getLastResult } from "../../src/middleware/middleware";
 import { InternalMessage } from "../../src/types";
 
 import { TestResponseSink } from "./test-response-sink";
@@ -97,8 +90,7 @@ export class TestIOProvider {
     }
     const message = this.findMessage(multisig, appId);
     if (!message) {
-      // FIXME: (ts-strict) refactor for proper argument passing
-      // https://github.com/counterfactual/monorepo/issues/95
+      // 🤮
       // @ts-ignore
       this.listeners.push({ appId, multisig, method, seq });
     } else {
@@ -112,19 +104,17 @@ export class TestIOProvider {
     next: Function,
     context: Context
   ) {
-    const msg = getLastResult(Opcode.IO_PREPARE_SEND, context.results);
-
-    // FIXME: (ts-strict) msg should never be null here
-    // https://github.com/counterfactual/monorepo/issues/94
-    const value = msg.value;
-
-    // Hack for testing and demo purposes, full IO handling by client goes here
+    const value = context.intermediateResults.outbox!
+    if (value === undefined) {
+      throw Error("tried to send undefined message");
+    }
     this.peer.receiveMessageFromPeer(value);
   }
 
   public async waitForIo(
     message: InternalMessage,
-    next: Function
+    next: Function,
+    context: Context
   ): Promise<cf.legacy.node.ClientActionMessage> {
     // Has websocket received a message for this appId/multisig
     // If yes, return the message, if not wait until it does
@@ -133,6 +123,7 @@ export class TestIOProvider {
       r => (resolve = r)
     );
 
+    // 🤮 listen for either multisig or appId depending on message.actionName
     let multisig: string = "";
     let appId: string = "";
 
@@ -152,6 +143,7 @@ export class TestIOProvider {
 
     this.listenOnce(
       msg => {
+        context.intermediateResults.inbox = msg;
         resolve(msg);
       },
       multisig,
