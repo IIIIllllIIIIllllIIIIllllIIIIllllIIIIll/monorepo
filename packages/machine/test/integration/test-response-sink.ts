@@ -9,10 +9,6 @@ import {
 } from "../../src/instruction-executor";
 import { Opcode } from "../../src/instructions";
 import { InternalMessage } from "../../src/types";
-import {
-  SimpleStringMapSyncDB,
-  WriteAheadLog
-} from "../../src/write-ahead-log";
 
 import { TestCommitmentStore } from "./test-commitment-store";
 import { TestIOProvider } from "./test-io-provider";
@@ -20,7 +16,6 @@ import { TestIOProvider } from "./test-io-provider";
 export class TestResponseSink implements cf.legacy.node.ResponseSink {
   public instructionExecutor: InstructionExecutor;
   public io: TestIOProvider;
-  public writeAheadLog: WriteAheadLog;
   public store: TestCommitmentStore;
   public signingKey: ethers.utils.SigningKey;
 
@@ -53,24 +48,12 @@ export class TestResponseSink implements cf.legacy.node.ResponseSink {
       )
     );
 
-    this.writeAheadLog = new WriteAheadLog(
-      new SimpleStringMapSyncDB(),
-      this.signingKey.address
-    );
-
     this.io = new TestIOProvider();
 
     // TODO: Document why this is needed.
     // https://github.com/counterfactual/monorepo/issues/108
     this.io.ackMethod = this.instructionExecutor.receiveClientActionMessageAck.bind(
       this.instructionExecutor
-    );
-
-    this.instructionExecutor.register(
-      Opcode.ALL,
-      async (message: InternalMessage, next: Function, context: Context) => {
-        this.writeAheadLog.write(message, context);
-      }
     );
 
     this.instructionExecutor.register(
