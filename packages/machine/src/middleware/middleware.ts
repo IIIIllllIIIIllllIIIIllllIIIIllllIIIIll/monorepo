@@ -92,31 +92,14 @@ export class Middleware {
   }
 
   public async run(msg: InternalMessage, context: Context) {
-    let counter = 0;
     const middlewares = this.middlewares;
     const opCode = msg.opCode;
 
     this.executeMiddlewaresRegisteredOnAll(msg, context);
 
-    async function callback() {
-      if (counter === middlewares[opCode].length - 1) {
-        return null;
-      }
-      // This is hacky, prevents next from being called more than once
-      counter += 1;
-      const middleware = middlewares[opCode][counter];
-      if (opCode === Opcode.ALL || middleware.scope === opCode) {
-        return middleware.method(msg, callback, context);
-      }
-      return callback();
+    for (const middleware of middlewares[opCode]) {
+      await middleware.method(msg, () => {}, context);
     }
-
-    // TODO: Document or throw error about the fact that you _need_ to have
-    // a middleware otherwise this will error with:
-    // `TypeError: Cannot read property '0' of undefined`
-    // https://github.com/counterfactual/monorepo/issues/133
-
-    return this.middlewares[opCode][0].method(msg, callback, context);
   }
 
   /**

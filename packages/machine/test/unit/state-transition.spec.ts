@@ -31,7 +31,6 @@ describe("State transition", () => {
       cf.legacy.node.ActionName.SETUP,
       Opcode.STATE_TRANSITION_PROPOSE,
       setupClientMsg(),
-      false
     );
     const proposal = SetupProposer.propose(message);
     validateSetupInfos(proposal.state);
@@ -41,7 +40,6 @@ describe("State transition", () => {
       cf.legacy.node.ActionName.INSTALL,
       Opcode.STATE_TRANSITION_PROPOSE,
       installClientMsg(),
-      false
     );
     const expectedCfAddr = new cf.legacy.app.AppInstance(
       cf.legacy.network.EMPTY_NETWORK_CONTEXT,

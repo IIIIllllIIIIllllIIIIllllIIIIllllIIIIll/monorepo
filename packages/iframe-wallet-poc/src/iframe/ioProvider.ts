@@ -119,6 +119,7 @@ export class IframeIoProvider {
     } else {
       this.peer.receiveMessageFromPeer(msg);
     }
+    next();
   }
 
   public async waitForIo(

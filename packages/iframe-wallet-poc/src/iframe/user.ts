@@ -173,12 +173,12 @@ export class User
   }
 
   private registerMiddlewares() {
-
     this.instructionExecutor.register(
       machine.instructions.Opcode.OP_SIGN,
       (message, next, context) => {
         const signature = signMyUpdate(context, this);
         context.intermediateResults.signature = signature;
+        next();
       }
     );
     this.instructionExecutor.register(
@@ -188,7 +188,8 @@ export class User
         next: Function,
         context: machine.instructionExecutor.Context
       ) => {
-        return validateSignatures(message, next, context, this);
+        validateSignatures(message, next, context, this);
+        next();
       }
     );
     this.instructionExecutor.register(

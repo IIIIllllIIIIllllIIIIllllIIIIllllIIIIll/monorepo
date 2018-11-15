@@ -48,11 +48,7 @@ export class ActionExecution {
 
   public createInternalMessage(instructionPointer): InternalMessage {
     const op = this.instructions[instructionPointer];
-    return new InternalMessage(
-      this.actionName,
-      op,
-      this.clientMessage,
-    );
+    return new InternalMessage(this.actionName, op, this.clientMessage);
   }
 
   public createContext(): Context {
