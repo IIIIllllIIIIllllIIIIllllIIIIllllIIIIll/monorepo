@@ -1,7 +1,6 @@
 import * as cf from "@counterfactual/cf.js";
 import AppInstanceJson from "@counterfactual/contracts/build/contracts/AppInstance.json";
 import MinimumViableMultisigJson from "@counterfactual/contracts/build/contracts/MinimumViableMultisig.json";
-import * as machine from "@counterfactual/machine";
 import { ethers } from "ethers";
 import * as _ from "lodash";
 

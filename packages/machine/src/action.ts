@@ -25,7 +25,6 @@ export function instructionGroupFromProtocolName(
 export class ActionExecution {
   public actionName: cf.legacy.node.ActionName;
   public instructions: Opcode[];
-  public instructionPointer: number;
   public clientMessage: cf.legacy.node.ClientActionMessage;
   public instructionExecutor: InstructionExecutor;
   public isAckSide: boolean;
@@ -35,7 +34,6 @@ export class ActionExecution {
   constructor(
     actionName: cf.legacy.node.ActionName,
     instructions: Opcode[],
-    instructionPointer: number,
     clientMessage: cf.legacy.node.ClientActionMessage,
     instructionExecutor: InstructionExecutor,
     isAckSide: boolean,
@@ -44,7 +42,6 @@ export class ActionExecution {
   ) {
     this.actionName = actionName;
     this.instructions = instructions;
-    this.instructionPointer = instructionPointer;
     this.clientMessage = clientMessage;
     this.instructionExecutor = instructionExecutor;
     this.isAckSide = isAckSide;
@@ -52,8 +49,8 @@ export class ActionExecution {
     this.intermediateResults = intermediateResults;
   }
 
-  public createInternalMessage(): InternalMessage {
-    const op = this.instructions[this.instructionPointer];
+  public createInternalMessage(instructionPointer): InternalMessage {
+    const op = this.instructions[instructionPointer];
     return new InternalMessage(
       this.actionName,
       op,
@@ -73,14 +70,15 @@ export class ActionExecution {
   }
 
   public async runAll(): Promise<void> {
-    while (this.instructionPointer < this.instructions.length) {
-      const internalMessage = this.createInternalMessage();
+    let instructionPointer = 0;
+    while (instructionPointer < this.instructions.length) {
+      const internalMessage = this.createInternalMessage(instructionPointer);
       const context = this.createContext();
 
       try {
         await this.instructionExecutor.middleware.run(internalMessage, context);
 
-        this.instructionPointer += 1;
+        instructionPointer += 1;
 
         // push modified value of `context.intermediateResults`
         this.intermediateResults = context.intermediateResults;
