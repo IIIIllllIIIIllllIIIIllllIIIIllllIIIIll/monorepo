@@ -29,14 +29,6 @@ export class User
   public address: string;
   public store: CommitmentStore;
 
-  /**
-   * The write ahead log is used to keep track of protocol executions.
-   * Specifically, whenever an instruction in a protocol is executed,
-   * we write to the log so that, if the machine crashes, we can resume
-   * by reading the last log entry and starting where the protocol left off.
-   */
-  public wal: machine.writeAheadLog.WriteAheadLog;
-
   // Observable
   public observers: Map<
     machine.mixins.NotificationType,
@@ -52,7 +44,6 @@ export class User
     address: string,
     privateKey: string,
     networkContext: cf.legacy.network.NetworkContext,
-    db?: machine.writeAheadLog.SyncDb,
     states?: cf.legacy.channel.StateChannelInfos
   ) {
     this.wallet = wallet;
@@ -64,10 +55,6 @@ export class User
         networkContext,
         states
       )
-    );
-    this.wal = new machine.writeAheadLog.WriteAheadLog(
-      db !== undefined ? db : new machine.writeAheadLog.SimpleStringMapSyncDB(),
-      this.address
     );
     this.store = new CommitmentStore();
     this.io.ackMethod = this.instructionExecutor.receiveClientActionMessageAck.bind(
@@ -131,18 +118,6 @@ export class User
     );
   }
 
-  // Load the previously saved data if any, and continue executing protocols
-  public async init() {
-    const savedLog = this.wal.readLog();
-    if (Object.keys(savedLog).length === 0) {
-      console.info("WAL is empty. Starting machine from clean state.");
-    } else {
-      console.info("WAL is not empty. Starting machine from persisted state.");
-    }
-
-    await this.instructionExecutor.resume(savedLog);
-  }
-
   public handleActionCompletion(notification: cf.legacy.node.Notification) {
     this.notifyObservers(`${notification.data.name}Completed`, {
       requestId: notification.data.requestId,
@@ -198,16 +173,6 @@ export class User
   }
 
   private registerMiddlewares() {
-    this.instructionExecutor.register(
-      machine.instructions.Opcode.ALL,
-      async (
-        message: machine.types.InternalMessage,
-        next: Function,
-        context: machine.instructionExecutor.Context
-      ) => {
-        this.wal.write(message, context);
-      }
-    );
 
     this.instructionExecutor.register(
       machine.instructions.Opcode.OP_SIGN,

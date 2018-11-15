@@ -79,16 +79,13 @@ export class IFrameWallet implements cf.legacy.node.ResponseSink {
   public async initUser(address: string) {
     let user: User | undefined;
     user = this.users.get(address);
-    if (user) {
-      await user.init();
-    }
+    return user;
   }
 
   public setUser(
     address: string,
     privateKey: string,
     networkContext?: cf.legacy.network.NetworkContext,
-    db?: machine.writeAheadLog.SimpleStringMapSyncDB,
     states?: cf.legacy.channel.StateChannelInfos
   ) {
     this.address = address;
@@ -101,7 +98,6 @@ export class IFrameWallet implements cf.legacy.node.ResponseSink {
           address,
           privateKey,
           networkContext || this.network,
-          db,
           states
         )
       );

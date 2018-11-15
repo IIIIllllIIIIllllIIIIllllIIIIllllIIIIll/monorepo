@@ -65,7 +65,6 @@ export class ActionExecution {
   public createContext(): Context {
     return {
       intermediateResults: this.intermediateResults,
-      instructionPointer: this.instructionPointer,
       // TODO: Should probably not pass the whole InstructionExecutor in, it breaks the encapsulation
       // We should figure out what others args from the InstructionExecutor are used and copy those over
       // https://github.com/counterfactual/monorepo/issues/136

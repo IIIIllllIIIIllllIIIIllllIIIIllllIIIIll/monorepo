@@ -9,7 +9,6 @@ import { applyMixins } from "./mixins/apply";
 import { NotificationType, Observable } from "./mixins/observable";
 import { Node } from "./node";
 import { InstructionMiddlewareCallback, StateProposal } from "./types";
-import { Log } from "./write-ahead-log";
 
 export class InstructionExecutorConfig {
   constructor(
@@ -46,37 +45,6 @@ export class InstructionExecutor implements Observable {
   public registerObserver(type: NotificationType, callback: Function) {}
   public unregisterObserver(type: NotificationType, callback: Function) {}
   public notifyObservers(type: NotificationType, data: object) {}
-
-  /**
-   * Restarts all protocols that were stopped mid execution, and returns when
-   * they all finish.
-   */
-  public async resume(log: Log) {
-    const executions = this.buildExecutionsFromLog(log);
-    return executions.reduce(
-      (promise, exec) => promise.then(_ => this.run(exec)),
-      Promise.resolve()
-    );
-  }
-
-  /**
-   * @returns all unfinished protocol executions read from the db.
-   */
-  public buildExecutionsFromLog(log: Log): ActionExecution[] {
-    return Object.keys(log).map(key => {
-      const entry = log[key];
-      const execution = new ActionExecution(
-        entry.actionName,
-        instructionGroupFromProtocolName(entry.actionName, entry.isAckSide),
-        entry.instructionPointer,
-        entry.clientMessage,
-        this,
-        entry.isAckSide,
-        entry.requestId
-      );
-      return execution;
-    });
-  }
 
   public receiveClientActionMessageAck(
     msg: cf.legacy.node.ClientActionMessage
@@ -172,7 +140,6 @@ export class Context {
 
   // todo(ldct): the following fields are very special-purpose and only accessed
   // in one place; it would be nice to get rid of them
-  public instructionPointer: number = Object.create(null);
   public instructionExecutor: InstructionExecutor = Object.create(null);
 }
 
