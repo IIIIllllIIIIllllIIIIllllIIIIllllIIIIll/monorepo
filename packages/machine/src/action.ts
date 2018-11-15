@@ -27,7 +27,6 @@ export class ActionExecution {
   public instructions: Opcode[];
   public clientMessage: cf.legacy.node.ClientActionMessage;
   public instructionExecutor: InstructionExecutor;
-  public isAckSide: boolean;
   public intermediateResults: IntermediateResults;
   public requestId: string;
 
@@ -36,7 +35,6 @@ export class ActionExecution {
     instructions: Opcode[],
     clientMessage: cf.legacy.node.ClientActionMessage,
     instructionExecutor: InstructionExecutor,
-    isAckSide: boolean,
     requestId: string,
     intermediateResults = {}
   ) {
@@ -44,7 +42,6 @@ export class ActionExecution {
     this.instructions = instructions;
     this.clientMessage = clientMessage;
     this.instructionExecutor = instructionExecutor;
-    this.isAckSide = isAckSide;
     this.requestId = requestId;
     this.intermediateResults = intermediateResults;
   }
@@ -55,7 +52,6 @@ export class ActionExecution {
       this.actionName,
       op,
       this.clientMessage,
-      this.isAckSide
     );
   }
 

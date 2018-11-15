@@ -34,7 +34,6 @@ export class InternalMessage {
     public actionName: cf.legacy.node.ActionName,
     public opCode: Opcode,
     public clientMessage: cf.legacy.node.ClientActionMessage,
-    public isAckSide: boolean
   ) {}
 }
 

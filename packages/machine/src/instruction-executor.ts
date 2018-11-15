@@ -55,7 +55,6 @@ export class InstructionExecutor implements Observable {
         instructionGroupFromProtocolName(msg.action, true),
         msg,
         this,
-        true,
         msg.requestId
       )
     );
@@ -68,7 +67,6 @@ export class InstructionExecutor implements Observable {
         instructionGroupFromProtocolName(msg.action, false),
         msg,
         this,
-        false,
         msg.requestId
       )
     );
