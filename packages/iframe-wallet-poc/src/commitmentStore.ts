@@ -157,7 +157,6 @@ export class CommitmentStore {
    */
   public async setCommitment(
     internalMessage: machine.types.InternalMessage,
-    next: Function,
     context: machine.instructionExecutor.Context
   ) {
     let appId;
@@ -209,7 +208,6 @@ export class CommitmentStore {
       counterpartySignature
     ]);
     this.store.put(appId, Object(appCommitments.serialize()));
-    next();
   }
 
   /**

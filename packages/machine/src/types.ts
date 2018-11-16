@@ -38,7 +38,7 @@ export class InternalMessage {
 }
 
 export type InstructionMiddlewareCallback = {
-  (message: InternalMessage, next: Function, context: Context);
+  (message: InternalMessage, context: Context);
 };
 
 export interface InstructionMiddleware {

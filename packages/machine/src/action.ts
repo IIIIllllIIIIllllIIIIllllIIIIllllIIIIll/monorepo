@@ -1,12 +1,8 @@
 import * as cf from "@counterfactual/cf.js";
 
-import {
-  Context,
-  InstructionExecutor,
-  IntermediateResults
-} from "./instruction-executor";
+import { Context, InstructionExecutor } from "./instruction-executor";
 import { ackInstructions, instructions, Opcode } from "./instructions";
-import { InternalMessage } from "./types";
+import { InternalMessage, StateProposal } from "./types";
 
 if (!Symbol.asyncIterator) {
   (Symbol as any).asyncIterator = Symbol.for("Symbol.asyncIterator");
@@ -27,7 +23,6 @@ export class ActionExecution {
   public instructions: Opcode[];
   public clientMessage: cf.legacy.node.ClientActionMessage;
   public instructionExecutor: InstructionExecutor;
-  public intermediateResults: IntermediateResults;
   public requestId: string;
 
   constructor(
@@ -35,15 +30,13 @@ export class ActionExecution {
     instructions: Opcode[],
     clientMessage: cf.legacy.node.ClientActionMessage,
     instructionExecutor: InstructionExecutor,
-    requestId: string,
-    intermediateResults = {}
+    requestId: string
   ) {
     this.actionName = actionName;
     this.instructions = instructions;
     this.clientMessage = clientMessage;
     this.instructionExecutor = instructionExecutor;
     this.requestId = requestId;
-    this.intermediateResults = intermediateResults;
   }
 
   public createInternalMessage(instructionPointer): InternalMessage {
@@ -53,27 +46,21 @@ export class ActionExecution {
 
   public createContext(): Context {
     return {
-      intermediateResults: this.intermediateResults,
-      // TODO: Should probably not pass the whole InstructionExecutor in, it breaks the encapsulation
-      // We should figure out what others args from the InstructionExecutor are used and copy those over
-      // https://github.com/counterfactual/monorepo/issues/136
+      intermediateResults: {},
       instructionExecutor: this.instructionExecutor
     };
   }
 
-  public async runAll(): Promise<void> {
+  public async runAll(): Promise<StateProposal> {
     let instructionPointer = 0;
+    const context = this.createContext();
+
     while (instructionPointer < this.instructions.length) {
       const internalMessage = this.createInternalMessage(instructionPointer);
-      const context = this.createContext();
 
       try {
         await this.instructionExecutor.middleware.run(internalMessage, context);
-
         instructionPointer += 1;
-
-        // push modified value of `context.intermediateResults`
-        this.intermediateResults = context.intermediateResults;
       } catch (e) {
         throw Error(
           `While executing op ${Opcode[internalMessage.opCode]} at seq ${
@@ -82,5 +69,6 @@ export class ActionExecution {
         );
       }
     }
+    return context.intermediateResults.proposedStateTransition!;
   }
 }

@@ -17,7 +17,6 @@ import { ProtocolOperation } from "./types";
 export class EthOpGenerator {
   public static generate(
     message: InternalMessage,
-    next: Function,
     context: Context,
     node: Node
   ): ProtocolOperation {

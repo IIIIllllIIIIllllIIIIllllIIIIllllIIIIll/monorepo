@@ -12,7 +12,6 @@ export class StateTransition {
    */
   public static propose(
     message: InternalMessage,
-    next: Function,
     context: Context,
     node: Node
   ): StateProposal {

@@ -26,7 +26,7 @@ export class Middleware {
     [Opcode.IO_PREPARE_SEND]: [
       {
         scope: Opcode.IO_PREPARE_SEND,
-        method: (internalMessage, next, context) => {
+        method: (internalMessage, context) => {
           const ret = NextMsgGenerator.generate(internalMessage, context);
           context.intermediateResults.outbox = ret;
         }
@@ -38,10 +38,9 @@ export class Middleware {
     [Opcode.OP_GENERATE]: [
       {
         scope: Opcode.OP_GENERATE,
-        method: (message, next, context) => {
+        method: (message, context) => {
           const operation = EthOpGenerator.generate(
             message,
-            next,
             context,
             this.node
           );
@@ -54,23 +53,17 @@ export class Middleware {
     [Opcode.STATE_TRANSITION_COMMIT]: [
       {
         scope: Opcode.STATE_TRANSITION_COMMIT,
-        method: (message, next, context) => {
+        method: (message, context) => {
           const newState = context.intermediateResults.proposedStateTransition!;
           context.instructionExecutor.mutateState(newState.state);
-          next();
         }
       }
     ],
     [Opcode.STATE_TRANSITION_PROPOSE]: [
       {
         scope: Opcode.STATE_TRANSITION_PROPOSE,
-        method: (message, next, context) => {
-          const proposal = StateTransition.propose(
-            message,
-            next,
-            context,
-            this.node
-          );
+        method: (message, context) => {
+          const proposal = StateTransition.propose(message, context, this.node);
           context.intermediateResults.proposedStateTransition = proposal;
           return proposal;
         }
@@ -98,7 +91,7 @@ export class Middleware {
     this.executeMiddlewaresRegisteredOnAll(msg, context);
 
     for (const middleware of middlewares[opCode]) {
-      await middleware.method(msg, () => {}, context);
+      await middleware.method(msg, context);
     }
   }
 
@@ -111,7 +104,7 @@ export class Middleware {
   // https://github.com/counterfactual/monorepo/issues/132
   private executeMiddlewaresRegisteredOnAll(msg, context) {
     this.middlewares[Opcode.ALL].forEach(middleware => {
-      middleware.method(msg, () => {}, context);
+      middleware.method(msg, context);
     });
   }
 }
@@ -172,7 +165,7 @@ export class KeyGenerator {
    * After generating this machine's app/ephemeral key, mutate the
    * client message by placing the ephemeral key on it for my address.
    */
-  public static generate(message: InternalMessage, next: Function) {
+  public static generate(message: InternalMessage) {
     // const wallet = ethers.Wallet.createRandom();
     // const installData = message.clientMessage.data;
     // FIXME: properly assign ephemeral keys
@@ -188,11 +181,5 @@ export class KeyGenerator {
 }
 
 export class SignatureValidator {
-  public static async validate(
-    message: InternalMessage,
-    next: Function,
-    context: Context
-  ) {
-    next();
-  }
+  public static async validate(message: InternalMessage, context: Context) {}
 }

@@ -73,7 +73,7 @@ export class InstructionExecutor implements Observable {
   }
 
   public async execute(execution: ActionExecution) {
-    await this.run(execution);
+    const stateProposal = await this.run(execution);
 
     this.notifyObservers("actionCompleted", {
       type: "notification",
@@ -81,17 +81,16 @@ export class InstructionExecutor implements Observable {
       data: {
         requestId: execution.requestId,
         name: execution.actionName,
-        proposedStateTransition:
-          execution.intermediateResults.proposedStateTransition,
+        proposedStateTransition: stateProposal,
         clientMessage: execution.clientMessage
       }
     });
   }
 
   public async run(execution: ActionExecution) {
+    let ret;
     try {
-      // Temporary error handling for testing resuming protocols
-      await execution.runAll();
+      ret = await execution.runAll();
       this.sendResponse(
         execution.requestId,
         cf.legacy.node.ResponseStatus.COMPLETED
@@ -103,6 +102,7 @@ export class InstructionExecutor implements Observable {
         cf.legacy.node.ResponseStatus.ERROR
       );
     }
+    return ret;
   }
 
   public sendResponse(

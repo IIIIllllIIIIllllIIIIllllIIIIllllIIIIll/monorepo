@@ -107,7 +107,6 @@ export class IframeIoProvider {
 
   public async ioSendMessage(
     internalMessage: machine.types.InternalMessage,
-    next: Function,
     context: machine.instructionExecutor.Context
   ) {
     const msg = context.intermediateResults.outbox!;
@@ -119,12 +118,10 @@ export class IframeIoProvider {
     } else {
       this.peer.receiveMessageFromPeer(msg);
     }
-    next();
   }
 
   public async waitForIo(
     message: machine.types.InternalMessage,
-    next: Function,
     context: machine.instructionExecutor.Context
   ): Promise<cf.legacy.node.ClientActionMessage> {
     // has websocket received a message for this appId/multisig

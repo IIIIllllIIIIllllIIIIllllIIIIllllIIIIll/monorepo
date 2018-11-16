@@ -101,7 +101,6 @@ export class TestIOProvider {
 
   public async ioSendMessage(
     internalMessage: InternalMessage,
-    next: Function,
     context: Context
   ) {
     const value = context.intermediateResults.outbox!
@@ -113,7 +112,6 @@ export class TestIOProvider {
 
   public async waitForIo(
     message: InternalMessage,
-    next: Function,
     context: Context
   ): Promise<cf.legacy.node.ClientActionMessage> {
     // Has websocket received a message for this appId/multisig

@@ -175,21 +175,15 @@ export class User
   private registerMiddlewares() {
     this.instructionExecutor.register(
       machine.instructions.Opcode.OP_SIGN,
-      (message, next, context) => {
+      (message, context) => {
         const signature = signMyUpdate(context, this);
         context.intermediateResults.signature = signature;
-        next();
       }
     );
     this.instructionExecutor.register(
       machine.instructions.Opcode.OP_SIGN_VALIDATE,
-      async (
-        message: machine.types.InternalMessage,
-        next: Function,
-        context: machine.instructionExecutor.Context
-      ) => {
-        validateSignatures(message, next, context, this);
-        next();
+      async (message, context) => {
+        validateSignatures(message, context, this);
       }
     );
     this.instructionExecutor.register(
@@ -224,7 +218,6 @@ function signMyUpdate(
 
 async function validateSignatures(
   message: machine.types.InternalMessage,
-  next: Function,
   context: machine.instructionExecutor.Context,
   user: User
 ) {

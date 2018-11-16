@@ -58,7 +58,7 @@ export class TestResponseSink implements cf.legacy.node.ResponseSink {
 
     this.instructionExecutor.register(
       Opcode.OP_SIGN,
-      (message, next, context) => {
+      (message, context) => {
         const signature = this.signMyUpdate(context);
         context.intermediateResults.signature = signature;
       }
@@ -66,8 +66,8 @@ export class TestResponseSink implements cf.legacy.node.ResponseSink {
 
     this.instructionExecutor.register(
       Opcode.OP_SIGN_VALIDATE,
-      async (message: InternalMessage, next: Function, context: Context) => {
-        return this.validateSignatures(message, next, context);
+      async (message, context: Context) => {
+        return this.validateSignatures(message, context);
       }
     );
 
@@ -152,7 +152,6 @@ export class TestResponseSink implements cf.legacy.node.ResponseSink {
 
   private validateSignatures(
     message: InternalMessage,
-    next: Function,
     context: Context
   ) {
     const operation = context.intermediateResults.operation!;
