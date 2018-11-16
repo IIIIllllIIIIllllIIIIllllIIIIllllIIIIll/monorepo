@@ -29,6 +29,11 @@ export class Middleware {
         method: (internalMessage, context) => {
           const ret = NextMsgGenerator.generate(internalMessage, context);
           context.intermediateResults.outbox = ret;
+          return {
+            intermediateResults: {
+              outbox: ret
+            }
+          };
         }
       }
     ],
@@ -45,6 +50,11 @@ export class Middleware {
             this.node
           );
           context.intermediateResults.operation = operation;
+          return {
+            intermediateResults: {
+              operation
+            }
+          };
         }
       }
     ],
@@ -56,6 +66,7 @@ export class Middleware {
         method: (message, context) => {
           const newState = context.intermediateResults.proposedStateTransition!;
           context.instructionExecutor.mutateState(newState.state);
+          return {};
         }
       }
     ],
@@ -65,7 +76,11 @@ export class Middleware {
         method: (message, context) => {
           const proposal = StateTransition.propose(message, context, this.node);
           context.intermediateResults.proposedStateTransition = proposal;
-          return proposal;
+          return {
+            intermediateResults: {
+              proposedStateTransition: proposal
+            }
+          };
         }
       }
     ]
@@ -84,15 +99,23 @@ export class Middleware {
     this.middlewares[scope].push({ scope, method });
   }
 
-  public async run(msg: InternalMessage, context: Context) {
+  public async run(msg: InternalMessage, context: Context): Promise<Context> {
     const middlewares = this.middlewares;
     const opCode = msg.opCode;
 
     this.executeMiddlewaresRegisteredOnAll(msg, context);
 
     for (const middleware of middlewares[opCode]) {
-      await middleware.method(msg, context);
+      const ret = await middleware.method(msg, context);
+      if (ret !== undefined && ret.intermediateResults !== undefined) {
+        context.intermediateResults = Object.assign(
+          {},
+          context.intermediateResults,
+          ret
+        );
+      }
     }
+    return context;
   }
 
   /**
@@ -166,20 +189,13 @@ export class KeyGenerator {
    * client message by placing the ephemeral key on it for my address.
    */
   public static generate(message: InternalMessage) {
-    // const wallet = ethers.Wallet.createRandom();
-    // const installData = message.clientMessage.data;
-    // FIXME: properly assign ephemeral keys
     // https://github.com/counterfactual/monorepo/issues/116
-    //
-    // if (installData.peerA.address === message.clientMessage.fromAddress) {
-    //  installData.keyA = wallet.address;
-    // } else {
-    //  installData.keyB = wallet.address;
-    // }
-    // return wallet;
+    return {};
   }
 }
 
 export class SignatureValidator {
-  public static async validate(message: InternalMessage, context: Context) {}
+  public static async validate(message: InternalMessage, context: Context) {
+    return {};
+  }
 }

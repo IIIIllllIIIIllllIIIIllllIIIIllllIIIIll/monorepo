@@ -77,11 +77,6 @@ export class AppInterface {
 
   public hash(): string {
     if (this.address === "0x0") {
-      // FIXME:
-      // https://github.com/counterfactual/monorepo/issues/119
-      console.error(
-        "WARNING: Can't compute hash for AppInterface because its address is 0x0"
-      );
       return ethers.constants.HashZero;
     }
     return keccak256(

@@ -53,13 +53,17 @@ export class ActionExecution {
 
   public async runAll(): Promise<StateProposal> {
     let instructionPointer = 0;
-    const context = this.createContext();
+    let context = this.createContext();
 
     while (instructionPointer < this.instructions.length) {
       const internalMessage = this.createInternalMessage(instructionPointer);
 
       try {
-        await this.instructionExecutor.middleware.run(internalMessage, context);
+        context = await this.instructionExecutor.middleware.run(
+          internalMessage,
+          context
+        );
+
         instructionPointer += 1;
       } catch (e) {
         throw Error(

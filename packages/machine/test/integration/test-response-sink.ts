@@ -61,13 +61,19 @@ export class TestResponseSink implements cf.legacy.node.ResponseSink {
       (message, context) => {
         const signature = this.signMyUpdate(context);
         context.intermediateResults.signature = signature;
+        return {
+          intermediateResults: {
+            signature: signature
+          }
+        };
       }
     );
 
     this.instructionExecutor.register(
       Opcode.OP_SIGN_VALIDATE,
-      async (message, context: Context) => {
-        return this.validateSignatures(message, context);
+      async (message, context) => {
+        this.validateSignatures(message, context);
+        return {};
       }
     );
 

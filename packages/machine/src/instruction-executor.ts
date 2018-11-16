@@ -139,8 +139,4 @@ export class Context {
   public instructionExecutor: InstructionExecutor = Object.create(null);
 }
 
-export interface MiddlewareReturnValue {
-  updateIntermediateResults?: IntermediateResults;
-}
-
 applyMixins(InstructionExecutor, [Observable]);

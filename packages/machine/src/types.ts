@@ -1,6 +1,6 @@
 import * as cf from "@counterfactual/cf.js";
 
-import { Context } from "./instruction-executor";
+import { Context, IntermediateResults } from "./instruction-executor";
 import { Opcode } from "./instructions";
 import { Node } from "./node";
 
@@ -38,8 +38,14 @@ export class InternalMessage {
 }
 
 export type InstructionMiddlewareCallback = {
-  (message: InternalMessage, context: Context);
+  (message: InternalMessage, context: Context):
+    | Promise<MiddlewareReturnValue>
+    | MiddlewareReturnValue;
 };
+
+export interface MiddlewareReturnValue {
+  intermediateResults?: IntermediateResults;
+}
 
 export interface InstructionMiddleware {
   scope: Opcode;

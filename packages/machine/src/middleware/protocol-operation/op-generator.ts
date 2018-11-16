@@ -27,6 +27,9 @@ export class EthOpGenerator {
     } else if (message.actionName === cf.legacy.node.ActionName.SETUP) {
       op = this.setup(message, context, node, proposedState.state);
     } else if (message.actionName === cf.legacy.node.ActionName.INSTALL) {
+      if (proposedState.cfAddr === undefined) {
+        throw Error("undefined cfAddr");
+      }
       op = this.install(
         message,
         context,

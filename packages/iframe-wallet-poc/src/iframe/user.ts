@@ -178,12 +178,14 @@ export class User
       (message, context) => {
         const signature = signMyUpdate(context, this);
         context.intermediateResults.signature = signature;
+        return {};
       }
     );
     this.instructionExecutor.register(
       machine.instructions.Opcode.OP_SIGN_VALIDATE,
       async (message, context) => {
         validateSignatures(message, context, this);
+        return {};
       }
     );
     this.instructionExecutor.register(
