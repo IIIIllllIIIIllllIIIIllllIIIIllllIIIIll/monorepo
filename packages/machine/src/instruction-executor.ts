@@ -77,7 +77,6 @@ export class InstructionExecutor implements Observable {
 
     this.notifyObservers("actionCompleted", {
       type: "notification",
-      NotificationType: "actionCompleted",
       data: {
         requestId: execution.requestId,
         name: execution.actionName,
