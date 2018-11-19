@@ -121,15 +121,9 @@ export class User
   public handleActionCompletion(notification: cf.legacy.node.Notification) {
     this.notifyObservers(`${notification.data.name}Completed`, {
       requestId: notification.data.requestId,
-      result: this.generateObserverNotification(notification),
+      result: notification.data.proposedStateTransition,
       clientMessage: notification.data.clientMessage
     });
-  }
-
-  public generateObserverNotification(
-    notification: cf.legacy.node.Notification
-  ): any {
-    return notification.data.proposedStateTransition;
   }
 
   public addObserver(message: cf.legacy.node.ClientActionMessage) {

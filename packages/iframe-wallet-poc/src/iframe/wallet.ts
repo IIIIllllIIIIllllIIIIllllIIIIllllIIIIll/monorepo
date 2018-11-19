@@ -194,8 +194,6 @@ export class IFrameWallet implements cf.legacy.node.ResponseSink {
   public sendNotification(type: cf.legacy.NotificationType, data: object) {
     const message: cf.legacy.node.Notification = {
       data,
-      type: "cf.legacy.node.Notification",
-      notificationType: type
     };
 
     this.sendResponse(message);
