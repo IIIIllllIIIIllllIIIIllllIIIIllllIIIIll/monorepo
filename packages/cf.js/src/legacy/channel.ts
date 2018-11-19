@@ -10,7 +10,6 @@ import {
   ActionName,
   ClientQuery,
   ClientQueryType,
-  FreeBalanceClientResponse,
   StateChannelDataClientResponse
 } from "./node";
 import * as types from "./types";
@@ -128,20 +127,6 @@ export class Channel {
   ): Promise<AppInstanceClient> {
     const appInterface = this.buildAppInterface(appDefinition);
     return new AppInstanceClient(this, name, appId, appInterface);
-  }
-
-  public async queryFreeBalance(): Promise<FreeBalanceClientResponse> {
-    const freeBalanceQuery: ClientQuery = {
-      requestId: this.client.generateRequestId(),
-      action: ActionName.QUERY,
-      query: ClientQueryType.FreeBalance,
-      multisigAddress: this.multisigAddress
-    };
-    const freeBalanceData = (await this.client.sendMessage(
-      freeBalanceQuery
-    )) as FreeBalanceClientResponse;
-
-    return freeBalanceData;
   }
 
   public async queryStateChannel(): Promise<StateChannelDataClientResponse> {

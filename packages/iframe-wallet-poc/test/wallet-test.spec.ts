@@ -331,24 +331,6 @@ describe("Lifecycle", async () => {
     );
   });
 
-  it("Can query freeBalance", async () => {
-    const connection = new ClientBridge(clientA);
-    const client = new cf.legacy.Client(connection);
-    await client.init();
-
-    const stateChannel = await client.connect(B_ADDRESS);
-    await stateChannel.install(
-      APP_NAME,
-      APP_INSTANCE,
-      APP_DEPOSITS,
-      APP_INITIAL_STATE
-    );
-    const freeBalance = await stateChannel.queryFreeBalance();
-
-    expect(freeBalance.data.freeBalance.aliceBalance.toNumber()).toBe(0);
-    expect(freeBalance.data.freeBalance.bobBalance.toNumber()).toBe(0);
-  });
-
   it("Can query stateChannel", async () => {
     const connection = new ClientBridge(clientA);
     const clientInterfaceA = new cf.legacy.Client(connection);

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
 import { StateChannelInfo } from "../channel";
-import { Address, FreeBalance } from "../utils";
+import { Address } from "../utils";
 
 // FIXME: move operation action names away from client action names
 // https://github.com/counterfactual/monorepo/issues/144
@@ -41,7 +41,6 @@ export enum ResponseStatus {
 
 export interface WalletMessaging {
   postMessage(message: Object);
-
   onMessage(callback: Function);
 }
 
@@ -79,7 +78,6 @@ export interface ClientQuery extends ClientMessage {
   requestId: string;
   query: ClientQueryType;
   data?: any;
-  userId?: string;
   multisigAddress?: Address;
 }
 
@@ -102,19 +100,6 @@ export interface UserDataClientResponse extends ClientResponse {
 export interface StateChannelDataClientResponse extends ClientResponse {
   data: {
     stateChannel: StateChannelInfo;
-  };
-}
-
-export interface FreeBalanceClientResponse extends ClientResponse {
-  requestId: string;
-  data: {
-    freeBalance: FreeBalance;
-  };
-}
-
-export interface InstallClientResponse extends ClientResponse {
-  data: {
-    appId: string;
   };
 }
 

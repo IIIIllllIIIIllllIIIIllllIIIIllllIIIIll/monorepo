@@ -101,6 +101,17 @@ export const instructions = {
     Opcode.OP_SIGN_VALIDATE,
     Opcode.STATE_TRANSITION_COMMIT
   ]
+  /*
+  [INSTALL_METACHANNEL]: [
+    PROPOSE_1,
+    GENERATE,
+    SIGN,
+    PREPARE_SEND,
+    SEND,               // send to multiple people
+    WF_2,               // wait for two replies
+    ...
+  ]
+  */
 };
 
 /**
