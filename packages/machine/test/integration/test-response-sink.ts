@@ -100,8 +100,8 @@ export class TestResponseSink implements cf.legacy.node.ResponseSink {
    */
   public async runProtocol(
     msg: cf.legacy.node.ClientActionMessage
-  ): Promise<cf.legacy.node.WalletResponse> {
-    const promise = new Promise<cf.legacy.node.WalletResponse>((resolve, reject) => {
+  ): Promise<cf.legacy.node.Response> {
+    const promise = new Promise<cf.legacy.node.Response>((resolve, reject) => {
       this.requests[msg.requestId] = resolve;
     });
     this.instructionExecutor.receiveClientActionMessage(msg);
@@ -111,8 +111,8 @@ export class TestResponseSink implements cf.legacy.node.ResponseSink {
   /**
    * Resolves the registered promise so the test can continue.
    */
-  public sendResponse(res: cf.legacy.node.WalletResponse) {
-    if ("requestId" in res && this.requests[res.requestId] !== undefined) {
+  public sendResponse(res: cf.legacy.node.Response) {
+    if (this.requests[res.requestId] !== undefined) {
       const promise = this.requests[res.requestId];
       delete this.requests[res.requestId];
       promise(res);
