@@ -53,8 +53,6 @@ export interface ClientMessage {
 }
 
 export interface Notification {
-  type: string;
-  notificationType: string;
   data: any;
 }
 

@@ -116,10 +116,6 @@ export class TestResponseSink implements cf.legacy.node.ResponseSink {
       const promise = this.requests[res.requestId];
       delete this.requests[res.requestId];
       promise(res);
-    } else {
-      // FIXME: Understand better what this is supposed to do...
-      // https://github.com/counterfactual/monorepo/issues/141
-      // throw Error(`Response ${res.type} not found in ResponseSink requests`);
     }
   }
 
