@@ -48,7 +48,7 @@ export class SetupProposer {
     );
     return {
       state: {
-        [String(message.clientMessage.multisigAddress)]: stateChannel
+        [message.clientMessage.multisigAddress]: stateChannel
       }
     };
   }
