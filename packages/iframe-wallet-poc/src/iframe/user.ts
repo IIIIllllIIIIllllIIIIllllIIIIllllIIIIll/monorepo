@@ -62,7 +62,7 @@ export class User
     );
     this.registerMiddlewares();
     this.instructionExecutor.registerObserver(
-      "actionCompleted",
+      "returnOfTheMachine",
       this.handleActionCompletion.bind(this)
     );
 
