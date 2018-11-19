@@ -76,7 +76,6 @@ export class InstructionExecutor implements Observable {
     const stateProposal = await this.run(execution);
 
     this.notifyObservers("returnOfTheMachine", {
-      type: "notification",
       data: {
         requestId: execution.requestId,
         name: execution.actionName,
