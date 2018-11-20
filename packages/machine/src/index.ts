@@ -15,5 +15,5 @@ export {
   mixins,
   state,
   types,
-  instructionExecutor,
+  instructionExecutor
 };
