@@ -47,7 +47,6 @@ describe("OpSetup", () => {
       TEST_MULTISIG_ADDRESS,
       TEST_FREE_BALANCE_APP_INSTANCE,
       TEST_FREE_BALANCE,
-      new cf.legacy.utils.Nonce(true, TEST_NONCE_UNIQUE_ID, 0)
     );
   });
 

@@ -169,7 +169,7 @@ export class EthOpGenerator {
       freeBalance.bobBalance,
       freeBalance.uniqueId,
       freeBalance.localNonce,
-      freeBalance.timeout,
+      freeBalance.timeout
     );
 
     const op = new OpInstall(
@@ -205,7 +205,7 @@ export class EthOpGenerator {
       freeBalance.bobBalance,
       freeBalance.uniqueId,
       freeBalance.localNonce,
-      freeBalance.timeout,
+      freeBalance.timeout
     );
 
     const op = new OpUninstall(

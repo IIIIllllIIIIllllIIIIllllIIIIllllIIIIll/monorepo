@@ -109,8 +109,6 @@ function validateSetupInfos(infos: cf.legacy.channel.StateChannelInfos) {
   expect(info.freeBalance.balanceOfAddress(B_ADDRESS).toNumber()).toEqual(0);
   expect(info.freeBalance.localNonce).toEqual(0);
   expect(info.freeBalance.uniqueId).toEqual(0);
-
-  const expectedSalt = ethers.utils.solidityKeccak256(["uint256"], [0]);
 }
 
 function installClientMsg(): cf.legacy.node.ClientActionMessage {
