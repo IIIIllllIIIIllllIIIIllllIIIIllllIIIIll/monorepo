@@ -81,7 +81,7 @@ class Channel {
     readonly rootNonce: Nonce = new Nonce(true, 0, 0),
     readonly freeBalances: {
       [assetType: number]: FreeBalance;
-    } = Channel.initialFreeBalances(multisigOwners, rootNonce),
+    } = Channel.initialFreeBalances(multisigOwners),
     readonly appInstances: {
       [appInstanceId: string]: AppInstanceInfo;
     } = {},
@@ -92,7 +92,6 @@ class Channel {
 
   static initialFreeBalances(
     multisigOwners: Address[],
-    initialAppsNonce: Nonce
   ): {
     [assetType: number]: FreeBalance;
   } {
@@ -104,8 +103,7 @@ class Channel {
       zeroBalance,
       0,
       0,
-      0,
-      initialAppsNonce
+      0
     );
     return {
       [AssetType.ETH]: ethFreeBalance
