@@ -36,8 +36,7 @@ export class SetupProposer {
       balances.peerB.balance,
       FREE_BALANCE_UNIQUE_ID,
       localNonce,
-      FREE_BALANCE_TIMEOUT,
-      new cf.legacy.utils.Nonce(false, FREE_BALANCE_UNIQUE_ID, 0)
+      FREE_BALANCE_TIMEOUT
     );
     const stateChannel = new StateChannelInfoImpl(
       toAddress,

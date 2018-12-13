@@ -10,7 +10,7 @@ export class OpSetup extends MultisigTxOp {
     readonly networkContext: cf.legacy.network.NetworkContext,
     readonly multisig: cf.legacy.utils.Address,
     readonly freeBalanceStateChannel: cf.legacy.app.AppInstance,
-    readonly freeBalance: cf.legacy.utils.FreeBalance,
+    readonly freeBalance: cf.legacy.utils.FreeBalance
   ) {
     super(multisig, freeBalance);
   }

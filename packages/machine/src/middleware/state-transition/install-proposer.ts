@@ -55,8 +55,7 @@ export class InstallProposer {
       peerB.balance,
       existingFreeBalance.uniqueId,
       existingFreeBalance.localNonce + 1,
-      data.timeout,
-      existingFreeBalance.dependencyNonce
+      data.timeout
     );
     const updatedStateChannel = new StateChannelInfoImpl(
       message.clientMessage.toAddress,

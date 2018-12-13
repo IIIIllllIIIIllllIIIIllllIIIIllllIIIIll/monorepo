@@ -28,8 +28,7 @@ export class UninstallProposer {
       oldFreeBalance.bobBalance.add(canon.peerB.balance),
       oldFreeBalance.uniqueId,
       oldFreeBalance.localNonce + 1,
-      oldFreeBalance.timeout,
-      oldFreeBalance.dependencyNonce
+      oldFreeBalance.timeout
     );
     const channel = channels[multisig];
     // now replace the state channel with a newly updated one
