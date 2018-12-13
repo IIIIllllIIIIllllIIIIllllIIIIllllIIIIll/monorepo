@@ -106,7 +106,6 @@ export class EthOpGenerator {
       message.clientMessage.multisigAddress;
     const freeBalance: cf.legacy.utils.FreeBalance =
       proposedSetup[multisig].freeBalance;
-    const nonce = freeBalance.dependencyNonce;
     const newFreeBalance = new cf.legacy.utils.FreeBalance(
       freeBalance.alice,
       freeBalance.aliceBalance,
@@ -115,7 +114,6 @@ export class EthOpGenerator {
       freeBalance.uniqueId,
       freeBalance.localNonce,
       freeBalance.timeout,
-      freeBalance.dependencyNonce
     );
     const canon = cf.legacy.utils.CanonicalPeerBalance.canonicalize(
       new cf.legacy.utils.PeerBalance(message.clientMessage.fromAddress, 0),
@@ -137,7 +135,6 @@ export class EthOpGenerator {
       multisig,
       freeBalanceAppInstance,
       newFreeBalance,
-      nonce
     );
   }
 

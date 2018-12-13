@@ -49,7 +49,6 @@ export class FreeBalance {
     readonly uniqueId: number,
     readonly localNonce: number,
     readonly timeout: number,
-    readonly dependencyNonce: Nonce
   ) {}
 
   public balanceOfAddress(address: Address): ethers.utils.BigNumber {
