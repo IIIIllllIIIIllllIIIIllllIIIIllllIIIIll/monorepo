@@ -85,7 +85,6 @@ function setupInstallState(): Node {
     0, // local nonce
     0, // uniqueId
     100, // timeout
-    new cf.legacy.utils.Nonce(true, 0, 0) // nonce
   );
   const info = new StateChannelInfoImpl(
     B_ADDRESS,
@@ -110,11 +109,6 @@ function validateSetupInfos(infos: cf.legacy.channel.StateChannelInfos) {
   expect(info.freeBalance.balanceOfAddress(B_ADDRESS).toNumber()).toEqual(0);
   expect(info.freeBalance.localNonce).toEqual(0);
   expect(info.freeBalance.uniqueId).toEqual(0);
-
-  const expectedSalt = ethers.utils.solidityKeccak256(["uint256"], [0]);
-
-  expect(info.freeBalance.dependencyNonce.nonceValue).toEqual(0);
-  expect(info.freeBalance.dependencyNonce.salt).toEqual(expectedSalt);
 }
 
 function installClientMsg(): cf.legacy.node.ClientActionMessage {

@@ -55,8 +55,7 @@ export const TEST_FREE_BALANCE = new cf.legacy.utils.FreeBalance(
   ethers.utils.parseEther("0.5"),
   0,
   10,
-  100,
-  new cf.legacy.utils.Nonce(true, 0, 5)
+  100
 );
 
 export const TEST_FREE_BALANCE_APP_INTERFACE = cf.legacy.utils.FreeBalance.contractInterface(

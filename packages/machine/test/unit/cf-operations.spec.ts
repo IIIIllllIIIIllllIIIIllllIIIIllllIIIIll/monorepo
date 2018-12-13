@@ -45,7 +45,6 @@ describe("ProtocolOperation subclasses", async () => {
         100,
         0
       );
-      const fakeNonce = new cf.legacy.utils.Nonce(false, 0, 0);
       const freeBal = new cf.legacy.utils.FreeBalance(
         alice,
         ethers.utils.parseEther("0.5"),
@@ -53,10 +52,9 @@ describe("ProtocolOperation subclasses", async () => {
         ethers.utils.parseEther("0.5"),
         1,
         0,
-        100,
-        fakeNonce
+        100
       );
-      const op = new OpSetup(fakeCtx, multisig, cfApp, freeBal, fakeNonce);
+      const op = new OpSetup(fakeCtx, multisig, cfApp, freeBal);
       const transaction = op.transaction([]);
       expect(transaction.to).toBe(multisig);
       expect(transaction.value).toBe(0);

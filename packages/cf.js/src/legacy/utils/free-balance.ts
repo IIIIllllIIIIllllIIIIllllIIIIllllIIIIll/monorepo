@@ -4,7 +4,6 @@ import { AppInterface, Terms } from "../app";
 import { NetworkContext } from "../network";
 
 import { Address } from ".";
-import { Nonce } from "./nonce";
 
 /**
  * The state of a free balance object. Passing this into an install or uninstall
@@ -48,8 +47,7 @@ export class FreeBalance {
     readonly bobBalance: ethers.utils.BigNumber,
     readonly uniqueId: number,
     readonly localNonce: number,
-    readonly timeout: number,
-    readonly dependencyNonce: Nonce
+    readonly timeout: number
   ) {}
 
   public balanceOfAddress(address: Address): ethers.utils.BigNumber {
