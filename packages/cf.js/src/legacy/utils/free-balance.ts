@@ -4,7 +4,6 @@ import { AppInterface, Terms } from "../app";
 import { NetworkContext } from "../network";
 
 import { Address } from ".";
-import { Nonce } from "./nonce";
 
 /**
  * The state of a free balance object. Passing this into an install or uninstall
